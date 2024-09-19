@@ -3,51 +3,45 @@ import TodoItem from "./TodoItem";
 import { List } from "@mui/material";
 import PropTypes from "prop-types";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { COLORS } from "../data/data";
 
-const TodoList = ({ todos, updateTodo, deleteTodo, reorderTodos }) => {
-  const [filter, setFilter] = useState('all'); // 'all', 'completed', 'incomplete'
+const TodoList = ({ todos = [], updateTodo, deleteTodo, reorderTodos }) => {
+  const [filter, setFilter] = useState('all');
 
   const handleOnDragEnd = (result) => {
-    if (!result.destination) return;
     reorderTodos(result.source.index, result.destination.index);
   };
-
+  
   const filteredTodos = todos.filter(todo => {
     if (filter === 'completed') return todo.completed;
     if (filter === 'incomplete') return !todo.completed;
     return true; // 'all'
   });
 
-  const COLORS ={
-    incomplete:'bg-red-200',
-    completed:'bg-green-200',
-    all:'bg-blue-200'
- };
-
   return (
     <>
-      <div className="mb-4 flex gap-2">
+      <div className="flex gap-2 mb-4">
         <button
           className={`h-10 px-4 py-2 rounded-md text-white ${filter === 'all' ? 'bg-blue-500' : 'bg-gray-500'}`}
           onClick={() => setFilter('all')}
         >
-          All
+          Todos
         </button>
         <button
           className={`h-10 px-4 py-2 rounded-md text-white ${filter === 'completed' ? 'bg-green-500' : 'bg-gray-500'}`}
           onClick={() => setFilter('completed')}
         >
-          Completed
+          Completo
         </button>
         <button
           className={`h-10 px-4 py-2 rounded-md text-white ${filter === 'incomplete' ? 'bg-red-500' : 'bg-gray-500'}`}
           onClick={() => setFilter('incomplete')}
         >
-          Incomplete
+          Incompleto
         </button>
       </div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="id">
+        <Droppable droppableId="droppable">
           {(provided) => (
             <List
               {...provided.droppableProps}
@@ -55,7 +49,7 @@ const TodoList = ({ todos, updateTodo, deleteTodo, reorderTodos }) => {
               className="space-y-2"
             >
               {filteredTodos.map((todo, index) => (
-                <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
+                <Draggable key={todo.id} draggableId={todo.id} index={index}>
                   {(provided) => (
                     <div
                       ref={provided.innerRef}

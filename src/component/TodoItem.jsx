@@ -21,7 +21,7 @@ const TodoItem = ({ todo, updateTodo, deleteTodo }) => {
   };
 
   return (
-    <div className="flex items-center  rounded ">
+    <div className="flex items-center rounded ">
       {isEditing ? (
         <TextField
           variant="outlined"
