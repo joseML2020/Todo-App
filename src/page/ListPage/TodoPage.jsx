@@ -7,9 +7,14 @@ export const TodoPage = () => {
   const [todos, setTodos] = useState(defaultTodos);
 
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todos"));
-    if (storedTodos) {
-      setTodos(storedTodos);
+    try {
+      const storedTodos = JSON.parse(localStorage.getItem("todos"));
+      if (storedTodos) {
+        setTodos(storedTodos);
+      }
+    } catch (e) {
+      console.error(e);
+      setTodos(defaultTodos);
     }
   }, []);
 
@@ -24,8 +29,14 @@ export const TodoPage = () => {
   };
 
   const updateTodo = (id, newText, completed) => {
-    const updatedTodos = todos.map(todo =>
-      todo.id === id ? { ...todo, text: newText ?? todo.text, completed: completed ?? todo.completed } : todo
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id
+        ? {
+            ...todo,
+            text: newText ?? todo.text,
+            completed: completed ?? todo.completed,
+          }
+        : todo
     );
     setTodos(updatedTodos);
   };
@@ -45,7 +56,12 @@ export const TodoPage = () => {
   return (
     <>
       <TodoInput addTodo={addTodo} />
-      <TodoList todos={todos} updateTodo={updateTodo} deleteTodo={deleteTodo} reorderTodos={reorderTodos} />
+      <TodoList
+        todos={todos}
+        updateTodo={updateTodo}
+        deleteTodo={deleteTodo}
+        reorderTodos={reorderTodos}
+      />
     </>
   );
 };
